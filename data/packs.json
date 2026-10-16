@@ -1,0 +1,96 @@
+{
+  "freefire": [
+    {
+      "id": "ff-1",
+      "name": "Starter Diamond Pack",
+      "amount": 200,
+      "bonus": 100,
+      "total": 300,
+      "price": 100,
+      "badge": "+50% EXTRA",
+      "popular": false
+    },
+    {
+      "id": "ff-2",
+      "name": "Gamer Diamond Pack",
+      "amount": 310,
+      "bonus": 290,
+      "total": 600,
+      "price": 200,
+      "badge": "DOUBLE VALUE",
+      "popular": false
+    },
+    {
+      "id": "ff-3",
+      "name": "Pro Master Diamond Pack",
+      "amount": 520,
+      "bonus": 520,
+      "total": 1040,
+      "price": 300,
+      "badge": "100% DOUBLE BONUS",
+      "popular": true
+    },
+    {
+      "id": "ff-4",
+      "name": "Mythic Titan Pack",
+      "amount": 1000,
+      "bonus": 2000,
+      "total": 3000,
+      "price": 800,
+      "badge": "🔥 3X MEGA BONANZA",
+      "popular": true
+    }
+  ],
+  "bgmi": [
+    {
+      "id": "bgmi-1",
+      "name": "Starter UC Pack",
+      "amount": 60,
+      "bonus": 30,
+      "total": 90,
+      "price": 75,
+      "badge": "+50% BONUS",
+      "popular": false
+    },
+    {
+      "id": "bgmi-2",
+      "name": "Royale Pass Bundle",
+      "amount": 300,
+      "bonus": 150,
+      "total": 450,
+      "price": 200,
+      "badge": "POPULAR",
+      "popular": false
+    },
+    {
+      "id": "bgmi-3",
+      "name": "Elite Pass Plus Bundle",
+      "amount": 600,
+      "bonus": 600,
+      "total": 1200,
+      "price": 380,
+      "badge": "100% BONUS",
+      "popular": true
+    },
+    {
+      "id": "bgmi-4",
+      "name": "Mythic Forge Pack",
+      "amount": 1500,
+      "bonus": 1500,
+      "total": 3000,
+      "price": 750,
+      "badge": "DOUBLE VALUE",
+      "popular": false
+    },
+    {
+      "id": "bgmi-5",
+      "name": "Glacier Airdrop Crate",
+      "amount": 3000,
+      "bonus": 4000,
+      "total": 7000,
+      "price": 1500,
+      "badge": "👑 VIP SPECIAL",
+      "popular": true
+    }
+  ]
+}

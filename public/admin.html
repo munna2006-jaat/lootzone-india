@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | LootZone India</title>
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+
+  <!-- Admin Login Overlay Modal -->
+  <div id="admin-login-overlay" class="login-overlay">
+    <div class="login-card">
+      <div class="login-icon">🛡️</div>
+      <h2 style="font-family: var(--font-gaming); font-size: 1.5rem; color: #fff; margin-bottom: 4px;">LOOTZONE ADMIN</h2>
+      <p style="font-size: 0.8rem; color: var(--text-muted);">Enter your secret Security PIN to manage customer top-ups & payment QR</p>
+      
+      <form id="admin-login-form">
+        <input type="password" id="login-pin" class="form-control login-pin-input" placeholder="Enter Admin Password" required autofocus>
+        <p id="login-error" style="color: var(--accent-orange); font-size: 0.75rem; margin-bottom: 10px; display: none;">
+          Incorrect Password. Please try again.
+        </p>
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 0.95rem; justify-content: center;">
+          UNLOCK DASHBOARD
+        </button>
+      </form>
+      <p style="font-size: 0.7rem; color: #64748b; margin-top: 14px;">🔒 Encrypted Session • Authorized Owner Access Only</p>
+    </div>
+  </div>
+
+  <!-- Main Admin Layout -->
+  <div class="admin-layout">
+
+    <!-- Top Admin Header -->
+    <header class="admin-header">
+      <div class="admin-brand">
+        <div class="admin-brand-icon">⚡</div>
+        <div>
+          <h1>LOOTZONE INDIA • ADMIN</h1>
+          <span style="font-size: 0.7rem; color: var(--accent-green); font-weight: 700;">🟢 ORDERS ENGINE LIVE & PERSISTENT</span>
+        </div>
+      </div>
+
+      <div class="admin-header-actions">
+        <a href="/" target="_blank" class="btn btn-secondary">🌐 Open Storefront</a>
+        <button id="logout-btn" class="btn btn-danger">🔒 Logout</button>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="admin-nav">
+      <button class="nav-tab-btn active" data-tab="orders">
+        <span>📋</span> <span>Live Orders</span>
+      </button>
+      <button class="nav-tab-btn" data-tab="settings">
+        <span>💳</span> <span>Payment & QR Settings</span>
+      </button>
+      <button class="nav-tab-btn" data-tab="packs">
+        <span>💎</span> <span>Pricing & Bundles</span>
+      </button>
+    </nav>
+
+    <!-- KPI Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-label">Pending Orders</span>
+        <span id="stat-pending" class="stat-value gold">0</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Completed Orders</span>
+        <span id="stat-completed" class="stat-value green">0</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Total Orders</span>
+        <span id="stat-total" class="stat-value cyan">0</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Verified Revenue</span>
+        <span id="stat-revenue" class="stat-value gold">₹0</span>
+      </div>
+    </div>
+
+    <!-- TAB 1: LIVE ORDERS CONTENT -->
+    <div id="tab-orders-content">
+      <!-- Filter and Refresh Controls -->
+      <div class="filter-bar">
+        <div class="filter-group">
+          <label style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Status:</label>
+          <select id="filter-status" class="select-filter">
+            <option value="all">All Orders</option>
+            <option value="pending" selected>Pending Only (Need Action)</option>
+            <option value="completed">Completed</option>
+            <option value="rejected">Rejected</option>
+          </select>
+
+          <label style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Game:</label>
+          <select id="filter-game" class="select-filter">
+            <option value="all">All Games</option>
+            <option value="freefire">Free Fire MAX</option>
+            <option value="bgmi">BGMI</option>
+          </select>
+        </div>
+
+        <button id="manual-refresh-btn" class="btn btn-secondary">
+          🔄 Refresh
+        </button>
+      </div>
+
+      <!-- Orders List Container -->
+      <div id="orders-list" class="orders-list">
+        <!-- Rendered by admin.js -->
+      </div>
+    </div>
+
+    <!-- TAB 2: UPI & QR SETTINGS -->
+    <div id="tab-settings-content" style="display: none;">
+      <div class="settings-section-card">
+        <h3>💳 UPI & QR Code Configuration</h3>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px;">
+          Change your UPI ID or upload your own QR code image (PhonePe/GooglePay/Paytm). The customer website will update immediately.
+        </p>
+
+        <form id="settings-form">
+          <div class="form-group">
+            <label class="form-label" for="input-upi-id">Your UPI ID (VPA)</label>
+            <input type="text" id="input-upi-id" class="form-control" placeholder="e.g. paytmqr2810050501011@paytm or 9876543210@ybl" required>
+            <span style="font-size: 0.7rem; color: #64748b;">Payments from users will directly credit this UPI ID.</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="input-merchant-name">Merchant / Business Display Name</label>
+            <input type="text" id="input-merchant-name" class="form-control" placeholder="VIP Gaming Top-Up">
+          </div>
+
+          <!-- Custom QR Image Upload -->
+          <div class="form-group">
+            <label class="form-label">Upload Custom QR Code (Optional)</label>
+            <input type="file" id="qr-upload-input" class="form-control" accept="image/*">
+            <div class="qr-preview-box">
+              <img id="current-qr-img" src="/assets/diamond.jpg" alt="Active QR" class="qr-preview-img">
+              <span style="font-size: 0.78rem; color: var(--text-muted);">
+                Currently active QR Code preview. You can upload any screenshot or photo of your soundbox/standee QR.
+              </span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="input-whatsapp">Customer Support WhatsApp Number</label>
+            <input type="text" id="input-whatsapp" class="form-control" placeholder="919876543210">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="input-announcement">Top Announcement Banner Text</label>
+            <input type="text" id="input-announcement" class="form-control" placeholder="Festival Offer text...">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="input-notice">Delivery Notice Text</label>
+            <input type="text" id="input-notice" class="form-control" placeholder="⚡ Instant Delivery notice...">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="input-new-pin">Change Admin PIN (Leave blank to keep current)</label>
+            <input type="password" id="input-new-pin" class="form-control" placeholder="Enter new PIN">
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="padding: 12px 20px; font-size: 0.95rem;">
+            💾 Save Payment Settings
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- TAB 3: PACKS & PRICING MANAGER -->
+    <div id="tab-packs-content" style="display: none;">
+      <div class="settings-section-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+          <h3>💎 Free Fire MAX Diamond Packs</h3>
+          <button id="add-ff-pack-btn" class="btn btn-secondary" style="font-size: 0.75rem;">+ Add FF Pack</button>
+        </div>
+        <div id="ff-packs-list"></div>
+      </div>
+
+      <div class="settings-section-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+          <h3>🪙 BGMI UC Packs</h3>
+          <button id="add-bgmi-pack-btn" class="btn btn-secondary" style="font-size: 0.75rem;">+ Add BGMI Pack</button>
+        </div>
+        <div id="bgmi-packs-list"></div>
+      </div>
+
+      <button id="save-packs-btn" class="btn btn-primary" style="padding: 12px 24px; font-size: 1rem; width: 100%;">
+        💾 Save All Pricing Changes
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Screenshot Modal -->
+  <div id="image-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px); z-index: 10000; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: var(--admin-surface); border: 1px solid var(--accent-cyan); border-radius: 12px; padding: 16px; max-width: 500px; width: 100%; text-align: center; position: relative;">
+      <button id="close-img-modal" style="position: absolute; top: 10px; right: 10px; background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;">&times;</button>
+      <h3 style="font-size: 1rem; margin-bottom: 12px; color: var(--accent-cyan);">Payment Slip Screenshot</h3>
+      <img id="modal-img" src="" alt="Slip" style="max-width: 100%; max-height: 70vh; border-radius: 8px; object-fit: contain;">
+    </div>
+  </div>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>
