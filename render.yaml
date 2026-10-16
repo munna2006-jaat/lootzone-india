@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: lootzone-india
+    runtime: node
+    plan: free
+    region: singapore # Closest server region to India for fastest ping
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production

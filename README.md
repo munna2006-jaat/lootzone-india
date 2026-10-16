@@ -6,14 +6,14 @@ Official, clean, trustworthy multi-page digital gaming top-up platform built spe
 
 ## 🌐 Complete Multi-Page Architecture (5-6 Separate Pages)
 
-| Page | URL | Purpose |
+| Page | URL Path | Purpose |
 |---|---|---|
-| **Home Hub** | [http://localhost:3000/](http://localhost:3000/) | Official Indian gaming store hub, game cards, trust metrics, reviews & live feed |
-| **Free Fire MAX** | [http://localhost:3000/freefire](http://localhost:3000/freefire) | Dedicated diamond top-up page with UID input, bundle selection & live summary |
-| **BGMI UC** | [http://localhost:3000/bgmi](http://localhost:3000/bgmi) | Dedicated BGMI UC top-up page with Character ID input & Royale Pass packs |
-| **Payment Checkout** | [http://localhost:3000/payment](http://localhost:3000/payment) | Dynamic UPI QR code, GPay/PhonePe/Paytm intents, UTR submission & slip upload |
-| **Order Tracking** | [http://localhost:3000/track](http://localhost:3000/track) | 4-step real-time timeline tracking by Player UID or Order ID |
-| **Admin Panel (Isolated)** | [http://localhost:3000/admin](http://localhost:3000/admin) | Private dashboard with 1-click UID copy, WhatsApp messaging, QR/UPI settings |
+| **Home Hub** | `/` | Official Indian gaming store hub, game cards, trust metrics, reviews & live feed |
+| **Free Fire MAX** | `/freefire` | Dedicated diamond top-up page with UID input, bundle selection & live summary |
+| **BGMI UC** | `/bgmi` | Dedicated BGMI UC top-up page with Character ID input & Royale Pass packs |
+| **Payment Checkout** | `/payment` | Dynamic UPI QR code, GPay/PhonePe/Paytm intents, UTR submission & slip upload |
+| **Order Tracking** | `/track` | 4-step real-time timeline tracking by Player UID or Order ID |
+| **Admin Panel (Isolated)** | `/admin` | Private dashboard with 1-click UID copy, WhatsApp messaging, QR/UPI settings |
 
 ---
 
@@ -34,9 +34,9 @@ Official, clean, trustworthy multi-page digital gaming top-up platform built spe
 
 ---
 
-## 🛡️ Admin Dashboard Features (`/admin`)
+## 🛡️ Admin Dashboard (`/admin`)
 
-- **Security**: PIN Protected (Default: `admin123`).
+- **Security Password**: `LootZone@Admin#2026!` *(Changeable anytime from settings tab)*.
 - **Private Route**: No admin buttons or links exist on any user storefront page.
 - **Owner Workflow for External Top-Up**:
   1. Customer places order on `/freefire` or `/bgmi` and pays via UPI on `/payment`.
@@ -50,16 +50,36 @@ Official, clean, trustworthy multi-page digital gaming top-up platform built spe
   - Update Business Name.
   - Upload custom QR code image (from PhonePe soundbox/standee).
   - Update customer support WhatsApp number.
-- **Packs & Pricing Tab**:
-  - Edit prices and diamond/UC bonus amounts anytime.
 
 ---
 
-## 🚀 Running the Project
+## 🚀 Free Deployment on Render (render.com)
 
-```bash
-npm start
-# or
-node server.js
-```
-Server runs at `http://localhost:3000`.
+1. Go to [https://dashboard.render.com](https://dashboard.render.com) and click **New +** -> **Web Service**.
+2. Connect your GitHub repository: `munna2006-jaat/lootzone-india`.
+3. Configure the service:
+   - **Name**: `lootzone-india` (or your chosen name)
+   - **Region**: `Singapore` (Closest to India for fastest latency)
+   - **Branch**: `main`
+   - **Runtime**: `Node`
+   - **Build Command**: `npm install`
+   - **Start Command**: `npm start`
+   - **Instance Type**: `Free`
+4. Click **Create Web Service**. Your live link will be `https://lootzone-india.onrender.com`.
+
+---
+
+## 🤖 UptimeRobot Setup (Keep Render 24/7 Alive for Free)
+
+Render's free tier spins down after 15 minutes of inactivity. Set up a free monitor on UptimeRobot to keep it awake 24/7:
+
+1. Sign up / Log in to [https://uptimerobot.com](https://uptimerobot.com).
+2. Click **+ Add New Monitor**.
+3. Fill in the details:
+   - **Monitor Type**: `HTTP(s)`
+   - **Friendly Name**: `LootZone India Top-Up`
+   - **URL (or IP)**: `https://<YOUR-RENDER-APP-NAME>.onrender.com/health`
+     *(Example: `https://lootzone-india.onrender.com/health`)*
+   - **Monitoring Interval**: `5 minutes`
+4. Click **Create Monitor**.
+5. Done! UptimeRobot will ping `/health` every 5 minutes, keeping your Render server **100% active and running 24x7 without sleeping**.

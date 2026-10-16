@@ -420,8 +420,45 @@ app.post('/api/admin/packs', requireAdmin, (req, res) => {
   res.json({ success: true, packs });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Gaming Top-Up Platform running at http://localhost:${PORT}`);
-  console.log(`🛡️ Admin Panel available at http://localhost:${PORT}/admin`);
+// ==========================================
+// UPTIMEROBOT & HEALTH CHECK ENDPOINTS
+// ==========================================
+const healthResponse = (req, res) => {
+  res.status(200).json({
+    status: 'healthy',
+    service: 'LootZone India',
+    uptimeSeconds: Math.floor(process.uptime()),
+    timestamp: new Date().toISOString(),
+    message: 'LootZone India Server is active and 24/7 online for UptimeRobot'
+  });
+};
+
+app.get('/health', healthResponse);
+app.head('/health', (req, res) => res.status(200).end());
+app.get('/ping', healthResponse);
+app.head('/ping', (req, res) => res.status(200).end());
+app.get('/api/health', healthResponse);
+
+// Auto Keep-Alive Self-Ping for Render Free Tier
+// (Automatically pings every 10 mins so Render container never sleeps!)
+const autoKeepAliveUrl = process.env.RENDER_EXTERNAL_URL || process.env.APP_URL;
+if (autoKeepAliveUrl) {
+  const https = autoKeepAliveUrl.startsWith('https') ? require('https') : require('http');
+  const pingUrl = `${autoKeepAliveUrl.replace(/\/$/, '')}/health`;
+  console.log(`📡 Auto Keep-Alive enabled for Render: ${pingUrl}`);
+  
+  setInterval(() => {
+    https.get(pingUrl, (res) => {
+      console.log(`[Keep-Alive Ping] Status: ${res.statusCode} at ${new Date().toLocaleTimeString()}`);
+    }).on('error', (err) => {
+      console.warn(`[Keep-Alive Ping Error]: ${err.message}`);
+    });
+  }, 10 * 60 * 1000); // Every 10 minutes
+}
+
+// Start server (Bind to 0.0.0.0 for Render/Docker/Cloud compatibility)
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 LootZone India Server running at http://0.0.0.0:${PORT}`);
+  console.log(`🛡️ Admin Panel available at http://0.0.0.0:${PORT}/admin`);
+  console.log(`💓 UptimeRobot Health check available at http://0.0.0.0:${PORT}/health`);
 });
