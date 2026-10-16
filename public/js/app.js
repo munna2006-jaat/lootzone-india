@@ -245,7 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
     orderSummaryBox.innerHTML = `
       <div class="summary-row">
         <span>Game</span>
-        <span style="color: #fff; font-weight: 700;">${isFF ? 'Free Fire MAX 🔥' : 'BGMI 🪖'}</span>
+        <span style="color: var(--text-main); font-weight: 700;">${isFF ? 'Free Fire MAX 🔥' : 'BGMI 🪖'}</span>
       </div>
       <div class="summary-row">
         <span>Package</span>
@@ -266,11 +266,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Request fresh QR code from server
     try {
-      const res = await fetch(`/api/qr?amount=${pack.price}&note=${encodeURIComponent(isFF ? 'FF_Diamond' : 'BGMI_UC')}`);
+      const res = await fetch(`/api/qr?amount=${pack.price}&note=${encodeURIComponent(isFF ? 'FF_Diamond' : 'BGMI_UC')}&_t=${Date.now()}`);
       const qrData = await res.json();
 
       if (qrData.qrDataUrl) {
-        qrImage.src = qrData.qrDataUrl;
+        qrImage.src = qrData.isCustomImage ? `${qrData.qrDataUrl}?_t=${Date.now()}` : qrData.qrDataUrl;
       }
 
       const activeUpiId = qrData.upiId || state.settings.upiId || 'paytmqr@paytm';
@@ -448,16 +448,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (data.orders && data.orders.length > 0) {
         trackResults.innerHTML = data.orders.map(o => `
-          <div style="background: rgba(7, 10, 18, 0.9); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; margin-bottom: 8px; text-align: left;">
+          <div style="background: #ffffff; border: 1.5px solid var(--border); border-radius: 10px; padding: 12px; margin-bottom: 8px; text-align: left; box-shadow: var(--shadow-sm);">
             <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 4px;">
-              <span style="color: var(--accent-cyan); font-weight: 700;">#${o.id}</span>
-              <span class="status-badge ${o.status}" style="font-weight: 700; text-transform: uppercase; color: ${o.status === 'completed' ? 'var(--accent-green)' : (o.status === 'rejected' ? 'var(--accent-orange)' : 'var(--accent-gold)')}">
+              <span style="color: var(--primary-blue); font-weight: 700;">#${o.id}</span>
+              <span class="status-badge ${o.status}" style="font-weight: 700; text-transform: uppercase; color: ${o.status === 'completed' ? 'var(--accent-green)' : (o.status === 'rejected' ? 'var(--accent-red)' : 'var(--gold-primary)')}">
                 ${o.status === 'completed' ? '✅ Completed' : (o.status === 'rejected' ? '❌ Rejected' : '⏳ Pending')}
               </span>
             </div>
-            <div style="font-size: 0.8rem; font-weight: 700; color: #fff;">${o.gameName} - ${o.totalItems} ${o.itemType}</div>
-            <div style="font-size: 0.72rem; color: var(--text-muted);">UID: ${o.uid} | Price: ₹${o.price}</div>
-            <div style="font-size: 0.65rem; color: #64748b; margin-top: 4px;">Placed: ${new Date(o.createdAt).toLocaleTimeString()}</div>
+            <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-main);">${o.gameName} - ${o.totalItems} ${o.itemType}</div>
+            <div style="font-size: 0.74rem; color: var(--text-muted);">UID: ${o.uid} | Price: ₹${o.price}</div>
+            <div style="font-size: 0.68rem; color: var(--text-sub); margin-top: 4px;">Placed: ${new Date(o.createdAt).toLocaleTimeString()}</div>
           </div>
         `).join('');
       } else {

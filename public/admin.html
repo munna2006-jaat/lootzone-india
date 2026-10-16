@@ -12,7 +12,7 @@
   <div id="admin-login-overlay" class="login-overlay">
     <div class="login-card">
       <div class="login-icon">🛡️</div>
-      <h2 style="font-family: var(--font-gaming); font-size: 1.5rem; color: #fff; margin-bottom: 4px;">LOOTZONE ADMIN</h2>
+      <h2 style="font-family: var(--font-gaming); font-size: 1.5rem; color: #0f2b5c; font-weight: 800; margin-bottom: 4px;">LOOTZONE ADMIN</h2>
       <p style="font-size: 0.8rem; color: var(--text-muted);">Enter your secret Security PIN to manage customer top-ups & payment QR</p>
       
       <form id="admin-login-form">
@@ -132,15 +132,27 @@
             <input type="text" id="input-merchant-name" class="form-control" placeholder="VIP Gaming Top-Up">
           </div>
 
-          <!-- Custom QR Image Upload -->
+          <!-- Custom QR Image Upload & URL -->
           <div class="form-group">
-            <label class="form-label">Upload Custom QR Code (Optional)</label>
+            <label class="form-label">Custom Payment QR Code Image</label>
             <input type="file" id="qr-upload-input" class="form-control" accept="image/*">
+            <span style="font-size: 0.72rem; color: var(--text-muted); display: block; margin-top: 4px;">
+              Select image from phone/laptop (Photo of soundbox, PhonePe / GPay / Paytm standee QR).
+            </span>
+
             <div class="qr-preview-box">
               <img id="current-qr-img" src="/assets/diamond.jpg" alt="Active QR" class="qr-preview-img">
-              <span style="font-size: 0.78rem; color: var(--text-muted);">
-                Currently active QR Code preview. You can upload any screenshot or photo of your soundbox/standee QR.
-              </span>
+              <div style="flex: 1;">
+                <div id="qr-status-text" style="font-size: 0.82rem; font-weight: 700; color: #0f2b5c; margin-bottom: 4px;">
+                  Active QR Code Preview
+                </div>
+                <p style="font-size: 0.74rem; color: var(--text-muted); margin-bottom: 8px;">
+                  This is the exact QR code displayed to customers on the payment page.
+                </p>
+                <button type="button" id="btn-remove-qr" class="btn btn-danger" style="font-size: 0.72rem; padding: 4px 10px;">
+                  🗑️ Remove Custom QR (Use Auto UPI QR)
+                </button>
+              </div>
             </div>
           </div>
 

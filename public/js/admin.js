@@ -433,13 +433,20 @@ document.addEventListener('DOMContentLoaded', () => {
       inputNotice.value = state.settings.deliveryNotice || '';
       inputAnnouncement.value = state.settings.announcement || '';
 
-      if (state.settings.customQrUrl) {
-        currentQrImg.src = state.settings.customQrUrl;
+      const qrStatusText = document.getElementById('qr-status-text');
+      const btnRemoveQr = document.getElementById('btn-remove-qr');
+
+      if (state.settings.customQrUrl && state.settings.customQrUrl.trim() !== '') {
+        currentQrImg.src = `${state.settings.customQrUrl}?_t=${Date.now()}`;
+        if (qrStatusText) qrStatusText.textContent = '✅ Custom Uploaded QR Code Active';
+        if (btnRemoveQr) btnRemoveQr.style.display = 'inline-flex';
       } else {
         // Fallback to generated QR
-        const qrRes = await fetch('/api/qr?amount=100');
+        const qrRes = await fetch(`/api/qr?amount=100&_t=${Date.now()}`);
         const qrData = await qrRes.json();
         currentQrImg.src = qrData.qrDataUrl || '/assets/diamond.jpg';
+        if (qrStatusText) qrStatusText.textContent = '⚡ Auto-Generated Dynamic UPI QR Active';
+        if (btnRemoveQr) btnRemoveQr.style.display = 'none';
       }
     } catch (e) {
       console.warn('Failed to load settings:', e);
@@ -468,6 +475,16 @@ document.addEventListener('DOMContentLoaded', () => {
         headers: authHeaders(),
         body: JSON.stringify(payload)
       });
+
+      if (res.status === 401) {
+        sessionStorage.removeItem('adminToken');
+        state.token = '';
+        loginOverlay.style.display = 'flex';
+        loginError.textContent = 'Session expired. Please log in with password: LootZone@Admin#2026!';
+        loginError.style.display = 'block';
+        return;
+      }
+
       const data = await res.json();
 
       if (res.ok && data.success) {
@@ -491,6 +508,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const file = qrUploadInput.files[0];
     if (!file) return;
 
+    // Instant local preview
+    currentQrImg.src = URL.createObjectURL(file);
+    const qrStatusText = document.getElementById('qr-status-text');
+    if (qrStatusText) qrStatusText.textContent = '⏳ Uploading to server...';
+
     const formData = new FormData();
     formData.append('qrImage', file);
 
@@ -503,18 +525,68 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         body: formData
       });
+
+      if (res.status === 401) {
+        sessionStorage.removeItem('adminToken');
+        state.token = '';
+        loginOverlay.style.display = 'flex';
+        loginError.textContent = 'Session expired. Please log in with password: LootZone@Admin#2026!';
+        loginError.style.display = 'block';
+        return;
+      }
+
       const data = await res.json();
 
       if (res.ok && data.success) {
-        currentQrImg.src = data.customQrUrl;
-        showAdminToast('Custom QR Code applied successfully!');
+        currentQrImg.src = `${data.customQrUrl}?_t=${Date.now()}`;
+        if (qrStatusText) qrStatusText.textContent = '✅ Custom Uploaded QR Code Active';
+        const btnRemoveQr = document.getElementById('btn-remove-qr');
+        if (btnRemoveQr) btnRemoveQr.style.display = 'inline-flex';
+        showAdminToast('Custom QR Code applied and live on payment page!');
       } else {
         showAdminToast(data.error || 'Upload failed', true);
+        loadSettings();
       }
     } catch (err) {
       showAdminToast('Error uploading QR code', true);
+      loadSettings();
     }
   });
+
+  // Remove / Reset Custom QR Image button
+  const btnRemoveQr = document.getElementById('btn-remove-qr');
+  if (btnRemoveQr) {
+    btnRemoveQr.addEventListener('click', async () => {
+      if (!confirm('Revert to automatic Dynamic UPI QR Code?')) return;
+
+      try {
+        const res = await fetch('/api/admin/reset-qr', {
+          method: 'POST',
+          headers: authHeaders()
+        });
+
+        if (res.status === 401) {
+          sessionStorage.removeItem('adminToken');
+          state.token = '';
+          loginOverlay.style.display = 'flex';
+          loginError.textContent = 'Session expired. Please log in again.';
+          loginError.style.display = 'block';
+          return;
+        }
+
+        const data = await res.json();
+        if (res.ok && data.success) {
+          showAdminToast('Switched to Dynamic UPI QR Code!');
+          qrUploadInput.value = '';
+          loadSettings();
+        } else {
+          showAdminToast(data.error || 'Failed to remove QR', true);
+        }
+      } catch (err) {
+        showAdminToast('Error resetting QR code', true);
+      }
+    });
+  }
 
   // Packs & Pricing Management
   async function loadPacks() {

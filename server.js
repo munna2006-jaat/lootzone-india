@@ -113,13 +113,8 @@ app.get('/api/qr', async (req, res) => {
     const { amount, note, orderId } = req.query;
     const settings = readJSON('settings.json') || {};
     
-    // If admin uploaded a custom QR code image and wants to use it directly
-    if (settings.customQrUrl && settings.useCustomQrOnly) {
-      return res.json({ qrDataUrl: settings.customQrUrl, isCustomImage: true });
-    }
-
-    const upiId = settings.upiId || 'paytmqr@paytm';
-    const merchantName = settings.merchantName || 'Gaming Store';
+    const upiId = (settings.upiId || 'lootzone@upi').trim();
+    const merchantName = (settings.merchantName || 'LootZone India').trim();
     const transNote = encodeURIComponent(note || `TopUp_${orderId || 'Game'}`);
     const payeeName = encodeURIComponent(merchantName);
 
@@ -129,23 +124,29 @@ app.get('/api/qr', async (req, res) => {
       upiUri += `&am=${parseFloat(amount).toFixed(2)}`;
     }
 
-    // Generate high quality QR Code Data URL
-    const qrDataUrl = await QRCode.toDataURL(upiUri, {
+    // Generate high quality dynamic QR code
+    const dynamicQrUrl = await QRCode.toDataURL(upiUri, {
       errorCorrectionLevel: 'H',
       margin: 2,
       width: 400,
       color: {
-        dark: '#030712',
+        dark: '#0f2b5c',
         light: '#ffffff'
       }
     });
 
+    // Check if custom uploaded QR code is present
+    const hasCustomQr = Boolean(settings.customQrUrl && settings.customQrUrl.trim() !== '');
+    const activeQrUrl = hasCustomQr ? settings.customQrUrl.trim() : dynamicQrUrl;
+
     res.json({
       upiUri,
-      qrDataUrl,
+      qrDataUrl: activeQrUrl,
+      dynamicQrUrl,
+      customQrUrl: settings.customQrUrl || null,
+      isCustomImage: hasCustomQr,
       upiId,
-      merchantName,
-      customQrUrl: settings.customQrUrl || null
+      merchantName
     });
   } catch (err) {
     console.error('QR Generation error:', err);
@@ -406,6 +407,19 @@ app.post('/api/admin/upload-qr', requireAdmin, upload.single('qrImage'), (req, r
     success: true,
     message: 'QR Code image uploaded successfully!',
     customQrUrl: qrImageUrl
+  });
+});
+
+// Reset / Remove Custom QR Image (revert to dynamic QR)
+app.post('/api/admin/reset-qr', requireAdmin, (req, res) => {
+  const currentSettings = readJSON('settings.json') || {};
+  currentSettings.customQrUrl = '';
+  writeJSON('settings.json', currentSettings);
+
+  res.json({
+    success: true,
+    message: 'Custom QR Code removed. Switched to Dynamic UPI QR Code!',
+    customQrUrl: ''
   });
 });
 

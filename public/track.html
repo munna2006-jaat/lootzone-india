@@ -39,7 +39,7 @@
 
     <!-- Search Panel -->
     <div class="panel-card">
-      <h2 style="font-family: var(--font-heading); font-size: 1.15rem; font-weight: 800; color: #fff; margin-bottom: 4px;">
+      <h2 style="font-family: var(--font-heading); font-size: 1.15rem; font-weight: 800; color: var(--primary-blue); margin-bottom: 4px;">
         Track Your Top-Up Order
       </h2>
       <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;">
@@ -114,7 +114,7 @@
         } else {
           resultsWrapper.innerHTML = `
             <div class="panel-card" style="text-align: center; padding: 24px;">
-              <h3 style="font-size: 1rem; color: #fff; margin-bottom: 4px;">No Order Found</h3>
+              <h3 style="font-size: 1rem; color: var(--primary-blue); font-weight: 800; margin-bottom: 4px;">No Order Found</h3>
               <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;">
                 No orders matching "${query}". Please check your UID or Order ID.
               </p>
@@ -145,7 +145,7 @@
         return `
           <div class="panel-card" style="border-left: 4px solid ${statusColor};">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-              <span style="font-family: var(--font-mono); font-weight: 700; color: #fff; font-size: 0.9rem;">#${order.id}</span>
+              <span style="font-family: var(--font-mono); font-weight: 700; color: var(--primary-blue); font-size: 0.95rem;">#${order.id}</span>
               <span style="color: ${statusColor}; font-size: 0.72rem; font-weight: 700; text-transform: uppercase;">
                 ${statusLabel}
               </span>
@@ -154,11 +154,11 @@
             <div class="summary-container" style="margin-bottom: 12px; padding: 10px;">
               <div class="summary-line">
                 <span>Game</span>
-                <span style="color: #fff; font-weight: 600;">${order.gameName}</span>
+                <span style="color: var(--text-main); font-weight: 700;">${order.gameName}</span>
               </div>
               <div class="summary-line">
                 <span>Player UID</span>
-                <span style="color: var(--primary); font-family: var(--font-mono); font-weight: 700;">${order.uid}</span>
+                <span style="color: var(--primary-blue); font-family: var(--font-mono); font-weight: 700;">${order.uid}</span>
               </div>
               <div class="summary-line">
                 <span>Package</span>
@@ -166,7 +166,7 @@
               </div>
               <div class="summary-line">
                 <span>Price</span>
-                <span style="color: #fff; font-weight: 700;">₹${order.price}</span>
+                <span style="color: var(--gold-primary); font-weight: 800; font-size: 1rem;">₹${order.price}</span>
               </div>
             </div>
 
